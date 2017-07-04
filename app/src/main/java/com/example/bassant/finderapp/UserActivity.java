@@ -44,7 +44,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_user);
 
-        bt = (Button) findViewById(R.id.but2);
+       //bt = (Button) findViewById(R.id.but2);
         lv = (ListView) findViewById(R.id.listView1);
         logout=(Button) findViewById(R.id.logout) ;
         userLocalStore = new UserLocalStore(this);
@@ -74,14 +74,17 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         strArr = new ArrayList<String>();
         strArr.add("Your previous activities:");
-        adapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_list_item_1, strArr);
+      /*  adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_list_item_1, strArr);*/
+        adapter =  new ArrayAdapter(this,android.R.layout.simple_list_item_1,android.R.id.text1,strArr);
+
         lv.setAdapter(adapter);
 
 
 
 
-        logout.setOnClickListener(new View.OnClickListener() {
+
+      /*  logout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -91,9 +94,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
 
             }
-        });
+        });*/
 
-        bt.setOnClickListener(new View.OnClickListener() {
+        /*bt.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -103,7 +106,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.notifyDataSetChanged();
 
             }
-        });
+        });*/
 
 
         fab2.setOnClickListener(new View.OnClickListener() {
@@ -146,22 +149,21 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.logout:
-                logout.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View arg0) {
-                        userLocalStore.clearUserData();
-                        userLocalStore.setUserLoggedIn(false);
-                        startActivity(new Intent(UserActivity.this, LoginActivity.class));
-
-
-                    }
-                });
+            case R.id.logout:{
+                userLocalStore.clearUserData();
+                userLocalStore.setUserLoggedIn(false);
+                Intent intent = new Intent(this, LoginActivity.class);
+                this.startActivity(intent);
+                return true;}
+            case R.id.show: {
+                String byDefault = "No previous activities to show!";
+                //strArr.add(et.getText().toString());
+               ///// strArr.clear();
+                strArr.add(byDefault);
+                adapter.notifyDataSetChanged();
                 return true;
-            case R.id.show:
-                //show();
-                return true;
+
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

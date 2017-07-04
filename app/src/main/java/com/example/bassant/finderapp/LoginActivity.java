@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     Button button;
     TextView signup;
     UserLocalStore userLocalStore;
+    int l=0;
 
 
 
@@ -42,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         user = new User();
-        userName = (EditText)findViewById(R.id.userName);
+        userName = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
         signup = (TextView)findViewById(R.id.signup) ;
 
@@ -61,10 +64,38 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(),"Please check the internet connection!",Toast.LENGTH_SHORT).show();
 
                 }
-                else {
-                    HttpLoginAsyncTask httpLoginAsyncTask = new HttpLoginAsyncTask();
-                    httpLoginAsyncTask.execute("http://alexmorsi.pythonanywhere.com/api/users/login/");
+
+                else{
+                    if (!validateUserName(userName.getText().toString())) {
+                        userName.setError("Username should consist of 1 word of only letters");
+                        l=0;
+
+                    }
+                    else {
+                        l =l+1;
+                    }
+                    if (password.getText().toString().length() <1) {
+                        password.setError("Password must contain at least 1 character");
+                        l=0;
+
+                    }
+                    else {
+                        l =l+1;
+                    }
+                    if ( l==2){
+
+                        HttpLoginAsyncTask httpLoginAsyncTask = new HttpLoginAsyncTask();
+                        httpLoginAsyncTask.execute("http://alexmorsi.pythonanywhere.com/api/users/login/");
+                        l=0;
+
+                    }
+                    else {
+                        Toast.makeText(getBaseContext(),"Please check the errors!",Toast.LENGTH_SHORT).show();
+                        l=0;
+
+                    }
                 }
+
             }
         });
 
@@ -81,6 +112,14 @@ public class LoginActivity extends AppCompatActivity {
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public boolean validateUserName(String UserName) {
+        String UsernamePattern = "[a-zA-Z]+";
+        Pattern pattern = Pattern.compile(UsernamePattern);
+        Matcher matcher = pattern.matcher(UserName);
+
+        return matcher.matches();
     }
 
 
