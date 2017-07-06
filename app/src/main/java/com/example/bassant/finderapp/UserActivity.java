@@ -12,12 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -82,7 +85,16 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                Intent intent = new Intent(UserActivity.this, DetailsActivity.class);
+                String message = "abc";
+                intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+            }
+        });
 
       /*  logout.setOnClickListener(new View.OnClickListener() {
 
@@ -156,10 +168,13 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 this.startActivity(intent);
                 return true;}
             case R.id.show: {
-                String byDefault = "No previous activities to show!";
+                //String byDefault = "No previous activities to show!";
                 //strArr.add(et.getText().toString());
                ///// strArr.clear();
-                strArr.add(byDefault);
+                strArr.add("1 Missed request, Date: 2017-07-01");
+                strArr.add("2 Found request, Date: 2017-07-03");
+                strArr.add("3 Found request, Date: 2017-07-05");
+
                 adapter.notifyDataSetChanged();
                 return true;
 

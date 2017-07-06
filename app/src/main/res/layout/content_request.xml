@@ -79,7 +79,7 @@
                 android:id="@+id/bPhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_marginTop="300dp"
                 android:layout_centerHorizontal="true"
                android:src="@drawable/camera"
                 />
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/radioButton"
-                android:layout_alignParentBottom="true"
+                android:layout_marginTop="300dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignStart="@+id/radioButton"

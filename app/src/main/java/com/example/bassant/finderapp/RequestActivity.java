@@ -45,8 +45,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.bassant.finderapp.R.drawable.men;
-
 public class RequestActivity extends AppCompatActivity {
 
 
@@ -104,17 +102,24 @@ public class RequestActivity extends AppCompatActivity {
                     }
                 }
                 try {
+
+
                     Bitmap bitmap;
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
 
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
                             bitmapOptions);
-                    //encode
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                     byte[] b = baos.toByteArray();
                     String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-                    // encode end
+                    Log.i("image",encodedImage);
+                    request.addImage(encodedImage);
+//                    Log.i("requeeeeeeeeeeeeeeeeee",request.getImages().toString());
+
+
+
+
                     viewImage.setImageBitmap(bitmap);
 
                     String path = android.os.Environment
@@ -139,6 +144,7 @@ public class RequestActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             } else if (requestCode == 2) {
 
                 Uri selectedImage = data.getData();
@@ -149,18 +155,23 @@ public class RequestActivity extends AppCompatActivity {
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                // encode start
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                 byte[] b = baos.toByteArray();
-                final String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                Log.i("image",encodedImage);
                 request.addImage(encodedImage);
-                //encode end
+//                Log.i("requeeeeeeeeeeeeeeeeee",request.getImages().toString());
+
+
                 //Log.w("path of image from gallery......******************.........", picturePath+"");
                 viewImage.setImageBitmap(thumbnail);
+
             }
+
         }
     }
+
 
 
 
@@ -223,11 +234,15 @@ public class RequestActivity extends AppCompatActivity {
                 List<String> now = request.getImages();
                 int nnow = now.size();
 
+                int j=request.getImages().size();
+                Log.i("3adad el swar", now.toString());
+
+
                 if (!isOnline()) {
                     Toast.makeText(getBaseContext(), "Please check the internet connection!", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    if (!validatefirstName(firstName.getText().toString())) {
+                   if (!validatefirstName(firstName.getText().toString())) {
                         firstName.setError("First name should consist of 1 word of only letters");
                         i = 0;
 
@@ -243,7 +258,8 @@ public class RequestActivity extends AppCompatActivity {
                     } else {
                         i = i + 1;
                     }
-                    if (nnow == 0) {
+
+                    if (j<1) {
                         noImage.setError("Please upload at least 1 photo!");
 
                         //Toast.makeText(getBaseContext(), "Please upload at least 1 photo!", Toast.LENGTH_SHORT).show();
@@ -289,16 +305,66 @@ public class RequestActivity extends AppCompatActivity {
     }
 
 
-    //Return true if email is valid and false if email is invalid
-    protected boolean validatedate(String Date) {
-        String datePattern = "[20][0-9]"
-                + "[-1-9]([0-2])*"+"[-1-9]([0-9])*";
+    protected boolean validatedate(String date) {
+//        Matcher matcher;
+        String DATE_PATTERN =
+                "((19|20)\\d\\d)[/-](0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])";
+//        Pattern pattern;
+        Pattern pattern = Pattern.compile(DATE_PATTERN);
+        Matcher matcher = pattern.matcher(date);
 
-        Pattern pattern = Pattern.compile(datePattern);
-        Matcher matcher = pattern.matcher(Date);
+//        matcher = Pattern.compile(DATE_PATTERN).matcher(Birthday);
 
-        return matcher.matches();
+        if(matcher.matches()){
+            matcher.reset();
+
+            if(matcher.find()){
+                String day = matcher.group(3);
+                String month = matcher.group(2);
+                int year = Integer.parseInt(matcher.group(1));
+
+                if (day.equals("31") &&
+                        (month.equals("4") || month .equals("6") || month.equals("9") ||
+                                month.equals("11") || month.equals("04") || month .equals("06") ||
+                                month.equals("09"))) {
+                    return false; // only 1,3,5,7,8,10,12 has 31 days
+                }
+
+                else if (month.equals("2") || month.equals("02")) {
+                    //leap year
+                    if(year % 4==0){
+                        if(day.equals("30") || day.equals("31")){
+                            return false;
+                        }
+                        else{
+                            return true;
+                        }
+                    }
+                    else{
+                        if(day.equals("29")||day.equals("30")||day.equals("31")){
+                            return false;
+                        }
+                        else{
+                            return true;
+                        }
+                    }
+                }
+
+                else{
+                    return true;
+                }
+            }
+
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
     }
+
+
     public static String POST(String url, Request request){
         InputStream inputStream = null;
         String result = "";
@@ -318,7 +384,12 @@ public class RequestActivity extends AppCompatActivity {
             jsonObject.accumulate("date", request.getDate());
             jsonObject.accumulate("fName", request.getFirstName());
             jsonObject.accumulate("gender", request.getGender());
-            //int m=request.getImages().size();
+
+            int m=request.getImages().size();
+//            Log.i("3adad el swarjson", request.getImages().toString());
+
+            jsonObject.accumulate("numberOfImages", request.getImages().size());
+
             jsonObject.accumulate("image1", request.getImages());
 
 

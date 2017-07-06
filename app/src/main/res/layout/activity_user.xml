@@ -16,7 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/bar"
+            app:titleTextColor="@color/white"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -44,7 +45,7 @@
         app:backgroundTint="@color/colorFAB1"
         android:visibility="invisible"
         app:pressedTranslationZ="12dp"
-        android:src="@drawable/miss"
+        android:src="@drawable/find"
 
 
         />
@@ -60,7 +61,7 @@
         android:visibility="invisible"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
-        android:src="@drawable/find" />
+        android:src="@drawable/miss" />
 
     <ScrollView
         android:layout_width="match_parent"
