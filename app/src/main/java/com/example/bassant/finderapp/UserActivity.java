@@ -17,6 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.util.ArrayList;
 
@@ -168,14 +175,63 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 this.startActivity(intent);
                 return true;}
             case R.id.show: {
+                
+
+
+
+                    // Create http cliient object to send request to server
+
+                    HttpClient Client = new DefaultHttpClient();
+
+                    // Create URL string
+
+                    String URL = "http://alexmorsi.pythonanywhere.com/api/users/login/bassantMorsi/";
+
+                    //Log.i("httpget", URL);
+
+                    try
+                    {
+
+                        Toast.makeText(getBaseContext(),"ya mosahel !", Toast.LENGTH_SHORT).show();
+
+                        String SetServerString = "";
+
+                        // Create Request to server and get response
+
+                        HttpGet httpget = new HttpGet(URL);
+                        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                        SetServerString = Client.execute(httpget, responseHandler);
+
+                        // Show response on activity
+                        if(SetServerString==null)
+                        {
+                            Toast.makeText(getBaseContext(),"Error !", Toast.LENGTH_SHORT).show();
+
+                        }
+                        else
+                        {
+                            Toast.makeText(getBaseContext(),"b3333333t",Toast.LENGTH_SHORT).show();
+
+                        }
+
+//                        content.setText(SetServerString);
+                    }
+                    catch(Exception ex)
+                    {
+                        ex.printStackTrace();                    }
+
+
+
+                /*HttpUserAsyncTask httpUserAsyncTask = new HttpUserAsyncTask();
+                httpUserAsyncTask.execute("http://alexmorsi.pythonanywhere.com/api/users/login/bassantMorsi/");*/
                 //String byDefault = "No previous activities to show!";
                 //strArr.add(et.getText().toString());
-               ///// strArr.clear();
-                strArr.add("1 Missed request, Date: 2017-07-01");
+               ///// strArr.clear();00000
+                /*strArr.add("1 Missed request, Date: 2017-07-01");
                 strArr.add("2 Found request, Date: 2017-07-03");
                 strArr.add("3 Found request, Date: 2017-07-05");
 
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();*/
                 return true;
 
             }
@@ -225,4 +281,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
+
+
+
+
 }

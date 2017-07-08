@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -181,6 +182,8 @@ public class RequestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_request);
 
         request= new Request();
+        Log.i("on create images ",request.getImages().toString());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         firstName = (EditText)findViewById(R.id.firstName) ;
@@ -220,6 +223,8 @@ public class RequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectImage();
+                Log.i("bphoto images ",request.getImages().toString());
+
             }
         });
 
@@ -231,11 +236,13 @@ public class RequestActivity extends AppCompatActivity {
 
                 //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
-                List<String> now = request.getImages();
+                final List<String> now = request.getImages();
                 int nnow = now.size();
 
                 int j=request.getImages().size();
                 Log.i("3adad el swar", now.toString());
+                Log.i("fab images ",request.getImages().toString());
+
 
 
                 if (!isOnline()) {
@@ -379,6 +386,8 @@ public class RequestActivity extends AppCompatActivity {
             String json = "";
 
             // 3. build jsonObject
+            //Log.i("on Post images ",request.getImages().toString());
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.accumulate("userName", request.getUserName());
             jsonObject.accumulate("date", request.getDate());
@@ -389,8 +398,22 @@ public class RequestActivity extends AppCompatActivity {
 //            Log.i("3adad el swarjson", request.getImages().toString());
 
             jsonObject.accumulate("numberOfImages", request.getImages().size());
+//            StringBuilder t = new StringBuilder();
+            List<String> current = new ArrayList<String>();
+            current=request.getImages();
 
-            jsonObject.accumulate("image1", request.getImages());
+            for (int l = 0 ; l<m ; l++){
+                String t="image"+(l+1);
+                Log.i("on Post images ",t);
+                String jj=current.get(l);
+                Log.i(t, jj);
+                jsonObject.accumulate(t, jj);
+
+
+//                jsonObject.accumulate(t, current.get(l));
+
+            }
+
 
 
 
@@ -435,7 +458,7 @@ public class RequestActivity extends AppCompatActivity {
         @Override
         protected  void onPreExecute ()
         {
-            request= new Request();
+           // request= new Request();
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -465,6 +488,7 @@ public class RequestActivity extends AppCompatActivity {
             request.setDate(dateString);
             request.setFirstName(firstNameString);
             request.setGender(gender);
+
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
